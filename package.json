@@ -1,0 +1,12 @@
+{
+  "name": "salon-appointment",
+  "version": "1.0.0",
+  "description": "Salon appointment challenge",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd app; vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
