@@ -8,7 +8,7 @@ const appointments = [
     appointmentTime: 200,
   },
   {
-    id: 1,
+    id: 2,
     service_id: 2,
     customerName: 'Mabel',
     appointmentTime: 200,

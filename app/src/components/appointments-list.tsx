@@ -1,30 +1,47 @@
-import { useEffect, useState } from 'react';
+import useAppointments from 'hooks/use-appointments';
 
 export default () => {
-  const [ appointments, setAppointments ] = useState<Appointment[]>();
-
-  useEffect(() => {
-    fetch('http://localhost:4000/appointments')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Could not get appointments');
-        }
-
-        return res.json();
-      })
-      .then((response) => {
-        setAppointments(response);
-      })
-      .catch((error) => {
-        console.error({error});
-      });
-  }, []);
+  const { appointments, loading } = useAppointments();
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <span>This is the appointment list</span>
-      {appointments && appointments.map(({id, customerName}) => (
-        <span>{`Appointment [${id}]: ${customerName}`}</span>))}
+
+      {loading && <span>Fetching appointments...</span>}
+
+      <div
+        style={{ display: 'flex', flexDirection: 'column', rowGap: '1.5rem', marginTop: '2rem' }}
+      >
+        {appointments &&
+          appointments.map(({ id, customerName, services }) => (
+            <div
+              key={id}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+            >
+              <span>{`Appointment [${id}] for client: ${customerName}`}</span>
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginLeft: '.75rem',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <span>Services:</span>
+
+                <ul style={{ margin: 0 }}>
+                  {services.map(({ id, name, price, salons }) => (
+                    <li key={id}>
+                      {name} for ${price} at{' '}
+                      {salons.map(({ name, location }) => `${name} - ${location}`).join(', ')}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
-}
+};
