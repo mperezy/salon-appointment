@@ -1,14 +1,15 @@
 import { createBrowserRouter } from 'react-router';
-import Appointments from 'components/appointments'
+import App from 'App';
+import Appointments from 'components/appointments-list';
 
-export default () => {
-    return createBrowserRouter([
-        {
-            path: '/appointments',
-            element: <Appointments />,
-        },
-        // {
-        //     path: ''
-        // }
-    ])
-};
+export default createBrowserRouter([
+  {
+    path: '/',
+    element: <App/>,
+  },
+  {
+    path: '/appointments',
+    element: <Appointments />,
+  },
+]);
+
