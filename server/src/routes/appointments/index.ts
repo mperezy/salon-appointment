@@ -1,12 +1,16 @@
 import express, { type Request, type Response } from 'express';
-import appointments from 'routes/appointments/data/appointments';
-import salons from 'routes/appointments/data/salons';
-import services from 'routes/appointments/data/services';
+import appointments from 'data/appointments';
+import salons from 'data/salons';
+import services from 'data/services';
 
 const app = express();
 
+const DB_APPOINTMENTS = [...appointments];
+
 app.get('/', (req: Request, res: Response) => {
-  const _appointments = appointments.map(({ service_id, ...appointment }) => ({
+  const appointmentId = req.query['id'];
+
+  const _appointments = DB_APPOINTMENTS.map(({ service_id, ...appointment }) => ({
     ...appointment,
     services: services
       .filter(({ id }) => id === service_id)
@@ -16,14 +20,24 @@ app.get('/', (req: Request, res: Response) => {
       })),
   }));
 
-  res.json(_appointments);
+  if (!appointmentId) {
+    res.json(_appointments);
+    return;
+  }
+
+  res.json(_appointments.filter(({ id }) => id === Number(appointmentId)));
 });
 
 app.post('/', (req: Request, res: Response) => {
   const { body } = req;
-  console.log({ body });
+  const newAppointment = {
+    id: DB_APPOINTMENTS.length + 1,
+    ...body,
+  };
 
-  res.json({ body });
+  DB_APPOINTMENTS.push(newAppointment);
+
+  res.json(newAppointment);
 });
 
 app.patch('/', (req: Request, res: Response) => {

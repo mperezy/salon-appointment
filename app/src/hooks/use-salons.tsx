@@ -5,19 +5,15 @@ export default () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [appointments, setAppointments] = useState<Appointment[]>();
 
-  const refetch = () =>
+  useEffect(() => {
     getAppointments().then((appointments) => {
       setAppointments(appointments);
       setLoading(false);
     });
-
-  useEffect(() => {
-    refetch().then();
   }, []);
 
   return {
     loading,
-    refetch,
     appointments,
   };
 };

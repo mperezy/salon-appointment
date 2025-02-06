@@ -1,5 +1,3 @@
-// id, name, location.
-
 const salons = [
   {
     id: 1,
