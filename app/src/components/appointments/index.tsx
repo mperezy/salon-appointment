@@ -27,7 +27,11 @@ export default () => {
     { appointmentId, create: modalCreateOpen, edit: modalEditOpen, delete: modalDeleteOpen },
     setModalOpen,
   ] = useState<EditDeleteModal>(editDeleteModal);
-  const { appointments, refetch, loading } = useAppointments();
+  const { appointments, refetch, loading } = useAppointments({
+    options: {
+      enabled: true,
+    },
+  });
 
   const handleModal = ({ modal, appointmentId = -1, open = true }: HandleModal) =>
     setModalOpen((prevState) => ({ ...prevState, appointmentId, [modal]: open }));

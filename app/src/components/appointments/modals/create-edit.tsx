@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ModalProps } from 'react-responsive-modal';
 import Modal from 'components/modal';
 import useServices from 'hooks/use-services';
 import useCreateAppointment from 'hooks/use-create-appointment';
+import useUpdateAppointment from 'hooks/use-update-appointment';
+import useAppointments from 'hooks/use-appointments';
 
 type Props = ModalProps & {
   appointmentId: number;
@@ -17,7 +19,14 @@ const defaultForm: Omit<AppointmentForm, 'service_id'> = {
 
 export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
   const { services, loading } = useServices();
+  const { appointments } = useAppointments({
+    params: isCreate ? undefined : { id: appointmentId },
+    options: {
+      enabled: !isCreate,
+    },
+  });
   const { mutation } = useCreateAppointment();
+  const { mutation: updateMutation } = useUpdateAppointment();
   const [form, setForm] = useState<Omit<AppointmentForm, 'service_id'>>(defaultForm);
   const [service, setService] = useState<string>('-1');
   const servicePrice = services?.find(({ id }) => id === Number(service))?.price;
@@ -34,12 +43,34 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
         });
 
         console.log({ appointmentCreated });
+      } else {
+        const { appointmentTime, customerName } = form;
+
+        const appointmentUpdated = await updateMutation({
+          id: appointmentId,
+          customerName,
+          appointmentTime,
+          service_id: Number(service),
+        });
+
+        console.log({ appointmentUpdated });
       }
 
       await refetch();
       props.onClose();
     }
   };
+
+  useEffect(() => {
+    if (!isCreate && appointments && appointments.length > 0) {
+      setForm({
+        customerName: appointments[0].customerName ?? '',
+        appointmentTime: appointments[0].appointmentTime ?? -1,
+      });
+
+      setService(appointments[0].services?.[0].id.toString());
+    }
+  }, [appointments]);
 
   return (
     <Modal {...props} title={`${isCreate ? 'Create' : 'Edit'} Appointment`}>
@@ -78,7 +109,7 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
 
           <label style={{ display: 'flex', columnGap: '.5rem', alignItems: 'center' }}>
             <b>Service:</b>
-            <select onChange={({ currentTarget: { value } }) => setService(value)}>
+            <select value={service} onChange={({ currentTarget: { value } }) => setService(value)}>
               <option value='-1'>Select a service</option>
 
               {services.map(({ id, name }) => (

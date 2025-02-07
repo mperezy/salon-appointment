@@ -5,12 +5,12 @@ import services from 'data/services';
 
 const app = express();
 
-const DB_APPOINTMENTS = [...appointments];
+const data = { DB_APPOINTMENTS: [...appointments] };
 
 app.get('/', (req: Request, res: Response) => {
   const appointmentId = req.query['id'];
 
-  const _appointments = DB_APPOINTMENTS.map(({ service_id, ...appointment }) => ({
+  const _appointments = data.DB_APPOINTMENTS.map(({ service_id, ...appointment }) => ({
     ...appointment,
     services: services
       .filter(({ id }) => id === service_id)
@@ -31,20 +31,27 @@ app.get('/', (req: Request, res: Response) => {
 app.post('/', (req: Request, res: Response) => {
   const { body } = req;
   const newAppointment = {
-    id: DB_APPOINTMENTS.length + 1,
+    id: data.DB_APPOINTMENTS.length + 1,
     ...body,
   };
 
-  DB_APPOINTMENTS.push(newAppointment);
+  data.DB_APPOINTMENTS.push(newAppointment);
 
   res.json(newAppointment);
 });
 
 app.patch('/', (req: Request, res: Response) => {
-  const { body } = req;
-  console.log({ body });
+  const { body: appointmentUpdated } = req;
 
-  res.json({ body });
+  data.DB_APPOINTMENTS = [...data.DB_APPOINTMENTS].map((appointment) => {
+    if (appointment.id === appointmentUpdated.id) {
+      return appointmentUpdated;
+    }
+
+    return appointment;
+  });
+
+  res.json(appointmentUpdated);
 });
 
 app.delete('/', (req: Request, res: Response) => {

@@ -21,3 +21,5 @@ type Appointment = {
 type AppointmentForm = {
   service_id: number;
 } & Pick<Appointment, 'customerName' | 'appointmentTime'>;
+
+type AppointmentUpdateForm = { id: number } & AppointmentForm;
