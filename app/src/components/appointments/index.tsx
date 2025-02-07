@@ -117,10 +117,12 @@ export default () => {
         />
       )}
 
-      {modalDeleteOpen && (
+      {modalDeleteOpen && appointments && (
         <AppointmentModal.Delete
           appointmentId={appointmentId}
           open={modalDeleteOpen}
+          refetch={refetch}
+          customerName={appointments.find(({ id }) => id === appointmentId)?.customerName ?? ''}
           onClose={() => handleModal({ modal: 'delete', open: false })}
         />
       )}

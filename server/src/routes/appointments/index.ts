@@ -55,10 +55,11 @@ app.patch('/', (req: Request, res: Response) => {
 });
 
 app.delete('/', (req: Request, res: Response) => {
-  const { body } = req;
-  console.log({ body });
+  const appointmentId = req.query['id'];
 
-  res.send(204);
+  data.DB_APPOINTMENTS = [...data.DB_APPOINTMENTS].filter(({ id }) => id !== Number(appointmentId));
+
+  res.sendStatus(204);
 });
 
 export default app;

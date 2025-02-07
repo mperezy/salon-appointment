@@ -8,7 +8,7 @@ type Props = {
   };
 };
 
-export default ({ params, options }: Props) => {
+export default ({ params, options: { enabled = true } }: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [appointments, setAppointments] = useState<Appointment[]>();
 
@@ -22,7 +22,7 @@ export default ({ params, options }: Props) => {
   );
 
   useEffect(() => {
-    if (options.enabled) {
+    if (enabled) {
       refetch().then();
     }
   }, []);
