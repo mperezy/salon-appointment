@@ -1,0 +1,27 @@
+services:
+  salon_appointment-psql:
+    image: postgres
+    hostname: salon_appointment-psql
+    container_name: salon_appointment-psql
+    restart: always
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - PGUSER=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=salon_appointment
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/scripts:/db-scripts
+      - ./db/postgres-server:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@salon.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    ports:
+      - "4001:80"
+    depends_on:
+      - salon_appointment-psql

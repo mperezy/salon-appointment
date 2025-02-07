@@ -3,3 +3,4 @@ local
 .idx/.data
 .idea
 .env
+db/postgres-server/
