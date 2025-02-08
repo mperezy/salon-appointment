@@ -1,63 +1,37 @@
 import express, { type Request, type Response } from 'express';
-import appointments from 'data/appointments';
-import salons from 'data/salons';
-import services from 'data/services';
+import {
+  getAppointmentsServicesAndSalons,
+  createAppointment,
+  updateAppointment,
+  softDeleteAppointment,
+} from 'data/appointments';
 
 const app = express();
 
-const data = { DB_APPOINTMENTS: [...appointments] };
+app.get('/', async (req: Request, res: Response) => {
+  const appointmentId = req.query['id'] as string | undefined;
+  const appointments = await getAppointmentsServicesAndSalons(appointmentId);
 
-app.get('/', (req: Request, res: Response) => {
-  const appointmentId = req.query['id'];
-
-  const _appointments = data.DB_APPOINTMENTS.map(({ service_id, ...appointment }) => ({
-    ...appointment,
-    services: services
-      .filter(({ id }) => id === service_id)
-      .map(({ salon_id, ...service }) => ({
-        ...service,
-        salons: salons.filter(({ id }) => id === salon_id),
-      })),
-  }));
-
-  if (!appointmentId) {
-    res.json(_appointments);
-    return;
-  }
-
-  res.json(_appointments.filter(({ id }) => id === Number(appointmentId)));
+  res.json(appointments);
 });
 
-app.post('/', (req: Request, res: Response) => {
-  const { body } = req;
-  const newAppointment = {
-    id: data.DB_APPOINTMENTS.length + 1,
-    ...body,
-  };
-
-  data.DB_APPOINTMENTS.push(newAppointment);
+app.post('/', async (req: Request, res: Response) => {
+  const { body: newAppointment } = req;
+  await createAppointment(newAppointment);
 
   res.json(newAppointment);
 });
 
-app.patch('/', (req: Request, res: Response) => {
+app.patch('/', async (req: Request, res: Response) => {
   const { body: appointmentUpdated } = req;
-
-  data.DB_APPOINTMENTS = [...data.DB_APPOINTMENTS].map((appointment) => {
-    if (appointment.id === appointmentUpdated.id) {
-      return appointmentUpdated;
-    }
-
-    return appointment;
-  });
+  await updateAppointment(appointmentUpdated);
 
   res.json(appointmentUpdated);
 });
 
-app.delete('/', (req: Request, res: Response) => {
-  const appointmentId = req.query['id'];
-
-  data.DB_APPOINTMENTS = [...data.DB_APPOINTMENTS].filter(({ id }) => id !== Number(appointmentId));
+app.delete('/', async (req: Request, res: Response) => {
+  const appointmentId = req.query['id'] as string;
+  await softDeleteAppointment(appointmentId);
 
   res.sendStatus(204);
 });

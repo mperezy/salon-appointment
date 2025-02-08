@@ -60,12 +60,12 @@ INSERT INTO salon_appointment_db.services (salon_id, name, price) VALUES
 CREATE TABLE salon_appointment_db.appointments (
   id SERIAL PRIMARY KEY,
   service_id INTEGER NOT NULL,
-  customerName TEXT NOT NULL,
-  appointmentTime NUMERIC(10, 2) NOT NULL,
-  isDeleted BOOLEAN NOT NULL,
+  "customerName" TEXT NOT NULL,
+  "appointmentTime" NUMERIC(10, 2) NOT NULL,
+  "isDeleted" BOOLEAN NOT NULL,
   FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
 );
 
-INSERT INTO salon_appointment_db.appointments (service_id, customerName, appointmentTime, isDeleted) VALUES
+INSERT INTO salon_appointment_db.appointments (service_id, "customerName", "appointmentTime", "isDeleted") VALUES
   (1, 'Xavier', 200, false),
   (2, 'Mabel', 300, false);
