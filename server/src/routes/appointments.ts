@@ -31,7 +31,7 @@ app.patch('/', async (req: Request, res: Response) => {
 
 app.delete('/', async (req: Request, res: Response) => {
   const appointmentId = req.query['id'] as string;
-  await softDeleteAppointment(appointmentId);
+  await softDeleteAppointment(Number(appointmentId));
 
   res.sendStatus(204);
 });

@@ -1,38 +1,21 @@
-import dbPostgres from 'data/db-postgres';
+import appointmentsPostgres from 'postgres/appointments';
+
+const USE_PRISMA = process.env.USE_PRISMA === 'true';
 
 export const getAppointmentsServicesAndSalons = async (id?: string): Promise<Appointment[]> => {
   try {
-    const whereClause = id ? `AND appointment.id = ${id}` : '';
+    if (USE_PRISMA) {
+      const prismaClient = await import('../prisma').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma/appointments').then(
+        (result) => result.default
+      );
 
-    const queryResult = await dbPostgres.query<Appointment>(
-      `SELECT appointment.id,
-              appointment."customerName",
-              appointment."appointmentTime",
-              appointment."isDeleted",
-              JSON_AGG(
-                      JSON_BUILD_OBJECT(
-                              'id', service.id,
-                              'name', service.name,
-                              'price', service.price,
-                              'salons', JSON_BUILD_ARRAY(
-                                      JSON_BUILD_OBJECT(
-                                              'id', salon.id,
-                                              'name', salon.name,
-                                              'location', salon.location
-                                      )
-                                        )
-                      )
-              ) AS services
-       FROM salon_appointment_db.appointments AS appointment
-                JOIN salon_appointment_db.services AS service ON appointment.service_id = service.id
-                JOIN salon_appointment_db.salons AS salon ON service.salon_id = salon.id
-       WHERE appointment."isDeleted" = FALSE ${whereClause}
-       GROUP BY appointment.id, appointment."customerName", appointment."appointmentTime"
-       ORDER BY appointment.id ASC;
-      `
-    );
+      return await appointmentsPrisma(prismaClient).getAppointmentsServicesAndSalons(id);
+    }
 
-    return queryResult.rows;
+    // eslint-disable-next-line no-console
+    console.log('**** The server is using Postgres `pg` package ****');
+    return await appointmentsPostgres.getAppointmentsServicesAndSalons(id);
   } catch (error) {
     throw new Error(`**** Could not get appointments, services and salons: ${error}`);
   }
@@ -40,14 +23,17 @@ export const getAppointmentsServicesAndSalons = async (id?: string): Promise<App
 
 export const createAppointment = async (appointment: Omit<AppointmentSQL, 'id' | 'isDeleted'>) => {
   try {
-    await dbPostgres.query(
-      `INSERT INTO salon_appointment_db.appointments
-       (service_id, "customerName", "appointmentTime", "isDeleted")
-       VALUES (${appointment.service_id}, '${appointment.customerName}',
-               ${appointment.appointmentTime}, false);`
-    );
+    if (USE_PRISMA) {
+      const prismaClient = await import('../prisma').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma/appointments').then(
+        (result) => result.default
+      );
+      return await appointmentsPrisma(prismaClient).createAppointment(appointment);
+    }
 
-    return;
+    // eslint-disable-next-line no-console
+    console.log('**** The server is using Postgres `pg` package ****');
+    return await appointmentsPostgres.createAppointment(appointment);
   } catch (error) {
     throw new Error(`**** Could not create appointment for ${appointment.customerName}: ${error}`);
   }
@@ -55,32 +41,35 @@ export const createAppointment = async (appointment: Omit<AppointmentSQL, 'id' |
 
 export const updateAppointment = async (appointment: Omit<AppointmentSQL, 'isDeleted'>) => {
   try {
-    const { id, customerName, appointmentTime, service_id } = appointment;
-    await dbPostgres.query(
-      `UPDATE salon_appointment_db.appointments AS appointment
-       SET "appointmentTime" = ${appointmentTime},
-           "customerName"    = '${customerName}',
-           service_id        = ${service_id}
-       WHERE appointment.id = ${id};
-      `
-    );
+    if (USE_PRISMA) {
+      const prismaClient = await import('../prisma').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma/appointments').then(
+        (result) => result.default
+      );
+      return await appointmentsPrisma(prismaClient).updateAppointment(appointment);
+    }
 
-    return;
+    // eslint-disable-next-line no-console
+    console.log('**** The server is using Postgres `pg` package ****');
+    return await appointmentsPostgres.updateAppointment(appointment);
   } catch (error) {
     throw new Error(`**** Could not update appointment ${appointment.id}: ${error}`);
   }
 };
 
-export const softDeleteAppointment = async (id: string) => {
+export const softDeleteAppointment = async (id: number) => {
   try {
-    await dbPostgres.query(
-      `UPDATE salon_appointment_db.appointments AS appointment
-       SET "isDeleted" = TRUE
-       WHERE appointment.id = ${id};
-      `
-    );
+    if (USE_PRISMA) {
+      const prismaClient = await import('../prisma').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma/appointments').then(
+        (result) => result.default
+      );
+      return await appointmentsPrisma(prismaClient).softDeleteAppointment(id);
+    }
 
-    return;
+    // eslint-disable-next-line no-console
+    console.log('**** The server is using Postgres `pg` package ****');
+    return await appointmentsPostgres.softDeleteAppointment(id);
   } catch (error) {
     throw new Error(`**** Could not soft delete appointment ${id}: ${error}`);
   }

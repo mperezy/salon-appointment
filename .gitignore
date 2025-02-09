@@ -4,3 +4,6 @@ local
 .idea
 .env
 db/postgres-server/
+
+# Prisma
+server/src/prisma/generated/

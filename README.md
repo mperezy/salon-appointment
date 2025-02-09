@@ -69,3 +69,100 @@ Include a README file with:
 Setup instructions.
 
 Brief explanation of your approach.
+
+# Backend
+
+The backend was built using Nodejs with Express in order to serve a REST API server.
+Typescript is the main language used.
+
+## Install dependencies
+
+```shell
+$ cd server
+$ yarn install
+```
+
+## Database
+
+Made with Postgres
+
+- To start Postgres server run:
+
+```shell
+$ docker compose up
+```
+
+- Database will be running in container `salon_appointment-psql` at `localhost:5432`.
+
+- Initialize DB with:
+```shell
+# Replace $PG_USER with your user name
+$ docker salon_appointment-psql exec -it psql -U $PG_USER -d salon_appointment -f /db-scripts/db-salon.sql
+```
+
+- Then you will need to fill up the env vars:
+
+```dotenv
+PG_HOST=localhost
+PG_USER=admin
+PG_PASSWORD=adnin1234
+PG_DB=salon_appointment
+PG_DB_SCHEMA=salon_appointment_db
+```
+
+## Using Prisma ORM (Requires Database setup from previous step)
+
+- The server is prepared to use Prisma ORM instead Postgres Typescript package `pg`.
+
+- First need to set the dotenv file with:
+
+```dotenv
+USE_PRISMA=true
+DB_URL="postgresql://admin:admin1234@localhost:5432/salon_appointment?schema=salon_appointment_db"
+```
+
+- Then you will need to generate required types based on models from `schema.prisma` file.
+
+```shell
+$ yarn prisma:db:generate
+```
+
+- Now all actions will be executed on Prisma ORM instead of Postgres `pg` package.
+
+## Run server
+
+- Once you followed all steps above, just execute:
+
+```shell
+$ yarn dev
+```
+
+- The server will be running at [http://localhost:4000](http://localhost:4000).
+
+# Frontend
+
+The frontend was build using Vite.js with Typescript as main language.
+
+## Install dependencies
+
+```shell
+$ yarn install
+```
+
+## Configure application
+
+- You will need to set the dotenv file with the next:
+
+```dotenv
+VITE_API_URL=http://localhost:4000
+```
+
+## Run web app
+
+- Once you followed all steps above, just execute:
+
+```shell
+$ yarn dev
+```
+
+- The web app will be running at [http://localhost:3000](http://localhost:3000).

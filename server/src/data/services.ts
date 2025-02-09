@@ -1,26 +1,19 @@
-import dbPostgres from 'data/db-postgres';
+import servicesPostgres from 'postgres/services';
 
-export const getServicesAndSalons = async () => {
+const USE_PRISMA = process.env.USE_PRISMA === 'true';
+
+export const getServicesAndSalons = async (): Promise<Service[]> => {
   try {
-    const queryResult = await dbPostgres.query<Service>(
-      `SELECT service.id,
-              service.name,
-              service.price,
-              JSON_AGG(
-                      JSON_BUILD_OBJECT(
-                              'id', salon.id,
-                              'name', salon.name,
-                              'location', salon.location
-                      )
-              ) AS salons
-       FROM salon_appointment_db.services AS service
-                JOIN salon_appointment_db.salons AS salon ON service.salon_id = salon.id
-       GROUP BY service.id
-       ORDER BY service.id ASC;
-      `
-    );
+    if (USE_PRISMA) {
+      const prismaClient = await import('../prisma').then((result) => result.default);
+      const servicesPrisma = await import('../prisma/services').then((result) => result.default);
 
-    return queryResult.rows.map(({ price, ...service }) => ({ ...service, price: Number(price) }));
+      return await servicesPrisma(prismaClient).getServicesAndSalons();
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('**** The server is using Postgres `pg` package ****');
+    return await servicesPostgres.getServicesAndSalons();
   } catch (error) {
     throw new Error(`**** Could not get services and salons: ${error}`);
   }
