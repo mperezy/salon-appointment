@@ -18,10 +18,14 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    hostname: pgadmin-psql
+    container_name: pgadmin-psql
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@salon.com
       - PGADMIN_DEFAULT_PASSWORD=admin1234
     ports:
       - "4001:80"
+    volumes:
+      - ./db/pgadmin:/var/lib/pgadmin
     depends_on:
       - salon_appointment-psql
