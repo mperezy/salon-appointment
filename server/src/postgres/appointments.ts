@@ -2,9 +2,11 @@ import dbPostgres from 'postgres/db-postgres';
 
 type AppointmentsPostgres = {
   getAppointmentsServicesAndSalons: (id?: string) => Promise<Appointment[]>;
-  createAppointment: (appointment: Omit<AppointmentSQL, 'id' | 'isDeleted'>) => Promise<void>;
-  updateAppointment: (appointment: Omit<AppointmentSQL, 'isDeleted'>) => Promise<void>;
-  softDeleteAppointment: (id: number) => Promise<void>;
+  createAppointment: (
+    appointment: Omit<AppointmentSQL, 'id' | 'isDeleted'>
+  ) => Promise<AppointmentSQL>;
+  updateAppointment: (appointment: Omit<AppointmentSQL, 'isDeleted'>) => Promise<AppointmentSQL>;
+  softDeleteAppointment: (id: number) => Promise<AppointmentSQL>;
 };
 
 const appointmentsPostgres: AppointmentsPostgres = {
@@ -43,19 +45,19 @@ const appointmentsPostgres: AppointmentsPostgres = {
   },
 
   createAppointment: async (appointment) => {
-    await dbPostgres.query(
+    const results = await dbPostgres.query<AppointmentSQL>(
       `INSERT INTO salon_appointment_db.appointments
        (service_id, "customerName", "appointmentTime", "isDeleted")
        VALUES (${appointment.service_id}, '${appointment.customerName}',
                ${appointment.appointmentTime}, false);`
     );
 
-    return;
+    return results.rows[0];
   },
 
   updateAppointment: async (appointment) => {
     const { id, customerName, appointmentTime, service_id } = appointment;
-    await dbPostgres.query(
+    const results = await dbPostgres.query<AppointmentSQL>(
       `UPDATE salon_appointment_db.appointments AS appointment
        SET "appointmentTime" = ${appointmentTime},
            "customerName"    = '${customerName}',
@@ -64,18 +66,18 @@ const appointmentsPostgres: AppointmentsPostgres = {
       `
     );
 
-    return;
+    return results.rows[0];
   },
 
   softDeleteAppointment: async (id) => {
-    await dbPostgres.query(
+    const results = await dbPostgres.query<AppointmentSQL>(
       `UPDATE salon_appointment_db.appointments AS appointment
        SET "isDeleted" = TRUE
        WHERE appointment.id = ${id};
       `
     );
 
-    return;
+    return results.rows[0];
   },
 };
 

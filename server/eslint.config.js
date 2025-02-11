@@ -11,7 +11,7 @@ import tseslint from 'typescript-eslint';
 // ];
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'node_modules', 'src/graphql-server/generated', 'src/prisma/generated'] },
   {
     extends: [pluginJs.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{js,ts}'],

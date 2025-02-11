@@ -16,15 +16,15 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 app.post('/', async (req: Request, res: Response) => {
-  const { body: newAppointment } = req;
-  await createAppointment(newAppointment);
+  const { body } = req;
+  const newAppointment = await createAppointment(body);
 
   res.json(newAppointment);
 });
 
 app.patch('/', async (req: Request, res: Response) => {
-  const { body: appointmentUpdated } = req;
-  await updateAppointment(appointmentUpdated);
+  const { body } = req;
+  const appointmentUpdated = await updateAppointment(body);
 
   res.json(appointmentUpdated);
 });

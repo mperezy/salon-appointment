@@ -72,7 +72,7 @@ Brief explanation of your approach.
 
 # Backend
 
-The backend was built using Nodejs with Express in order to serve a REST API server.
+The backend was built using Nodejs with Express in order to serve a REST and GraphQL API server.
 Typescript is the main language used.
 
 ## Install dependencies
@@ -128,6 +128,46 @@ $ yarn prisma:db:generate
 ```
 
 - Now all actions will be executed on Prisma ORM instead of Postgres `pg` package.
+
+## REST API
+
+- For REST API, the usage for this one is under the next endpoints:
+    - Appointments: 
+      - [GET] [http://localhost:4000/appointments](http://localhost:4000/appointments)
+      - [GET] [http://localhost:4000/appointments?id=1](http://localhost:4000/appointments?id=1)
+      - [POST | PATCH | DELETE] [http://localhost:4000/appointments](http://localhost:4000/appointments)
+    - Services:
+      - [GET] [http://localhost:4000/services](http://localhost:4000/services)
+
+## GraphQL API
+- For GraphQL API, it uses Prisma ORM by default since Prisma was set on the GraphQL server context.
+- The server is exposed simultaneously with the REST API, the endpoint for GraphQL is:
+  - [http://localhost:4000/graphql](http://localhost:4000/graphql) - This URL can be used to run the playground in the browser.
+- The Queries and Mutations implemented are:
+  - Queries:
+    ```graphql
+    type Query {
+      appointmentQuery(id: Int!): appointments!
+      appointmentQueryList(id: String): [appointmentList!]!
+      salonQuery(id: Int!): salons!
+      serviceAndSalonsQueryList: [serviceAndSalons!]!
+      serviceQuery(id: Int!): services!
+    }
+    ```
+  - Mutations:
+    ```graphql
+    type Mutation {
+      createAppointment(appointmentTime: Float!, customerName: String!, service_id: Int!): appointments!
+      recoverAppointment(id: Int!): appointments!
+      softDeleteAppointment(id: Int!): appointments!
+      updateAppointment(appointmentTime: Float!, customerName: String!, id: Int!, service_id: Int!): appointments!
+     }
+    ```
+- To generate GraphQL types so the Frontend will be ready to use for useQuery or useMutations, run:
+```shell
+$ yarn graphql:generate
+```
+- These types will be created in the folder [app/src/graphql-generated/](app/src/graphql-generated/).
 
 ## Run server
 

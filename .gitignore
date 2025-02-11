@@ -8,3 +8,7 @@ db/pgadmin/
 
 # Prisma
 server/src/prisma/generated/
+
+# GraphQL
+server/src/graphql-server/generated
+app/src/graphql-generated
