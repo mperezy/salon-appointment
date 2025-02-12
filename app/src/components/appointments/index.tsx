@@ -103,7 +103,9 @@ export default () => {
           isCreate
           appointmentId={appointmentId}
           open={modalCreateOpen}
-          refetch={refetch}
+          refetch={async () => {
+            await refetch();
+          }}
           onClose={() => handleModal({ modal: 'create', open: false })}
         />
       )}
@@ -112,7 +114,9 @@ export default () => {
         <AppointmentModal.CreateEdit
           appointmentId={appointmentId}
           open={modalEditOpen}
-          refetch={refetch}
+          refetch={async () => {
+            await refetch();
+          }}
           onClose={() => handleModal({ modal: 'edit', open: false })}
         />
       )}
@@ -121,7 +125,9 @@ export default () => {
         <AppointmentModal.Delete
           appointmentId={appointmentId}
           open={modalDeleteOpen}
-          refetch={refetch}
+          refetch={async () => {
+            await refetch();
+          }}
           customerName={appointments.find(({ id }) => id === appointmentId)?.customerName ?? ''}
           onClose={() => handleModal({ modal: 'delete', open: false })}
         />

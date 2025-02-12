@@ -197,6 +197,18 @@ $ yarn install
 VITE_API_URL=http://localhost:4000
 ```
 
+## API connection
+
+- By default, the web app is using the REST API.
+- The web app is prepared to make API requests using GraphQL,
+to achieve that you only need to set a env variable:
+```dotenv
+VITE_API_URL=http://localhost:4000
+VITE_USE_GRAPHQL=true
+```
+- In case you want to go back to REST API usage, just set the 
+env var `VITE_USE_GRAPHQL=false` or just remove it from the dotenv file.
+
 ## Run web app
 
 - Once you followed all steps above, just execute:

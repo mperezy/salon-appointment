@@ -1,17 +1,12 @@
-import { useState } from 'react';
-import deleteAppointment from 'services/delete-appointment';
+import useDeleteAppointmentGraphql from 'hooks/graphql/use-delete-appointment';
+import useDeleteAppointmentRest from 'hooks/rest/use-delete-appointment';
 
-export default () => {
-  const [loading, setLoading] = useState<boolean>(true);
+const USE_GRAPHQL = import.meta.env.VITE_USE_GRAPHQL === 'true';
 
-  const mutation = async (appointmentId: number) => {
-    setLoading(true);
+export default (): UseDeleteAppointmentResult => {
+  if (USE_GRAPHQL) {
+    return useDeleteAppointmentGraphql();
+  }
 
-    return await deleteAppointment(appointmentId);
-  };
-
-  return {
-    loading,
-    mutation,
-  };
+  return useDeleteAppointmentRest();
 };

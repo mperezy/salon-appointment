@@ -20,7 +20,7 @@ const defaultForm: Omit<AppointmentForm, 'service_id'> = {
 export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
   const { services, loading } = useServices();
   const { appointments } = useAppointments({
-    params: isCreate ? undefined : { id: appointmentId },
+    params: isCreate ? undefined : { id: String(appointmentId) },
     options: {
       enabled: !isCreate,
     },
@@ -42,6 +42,7 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
           service_id: Number(service),
         });
 
+        // eslint-disable-next-line no-console
         console.log({ appointmentCreated });
       } else {
         const { appointmentTime, customerName } = form;
@@ -53,6 +54,7 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
           service_id: Number(service),
         });
 
+        // eslint-disable-next-line no-console
         console.log({ appointmentUpdated });
       }
 
@@ -70,7 +72,7 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
 
       setService(appointments[0].services?.[0].id.toString());
     }
-  }, [appointments]);
+  }, [appointments, isCreate]);
 
   return (
     <Modal {...props} title={`${isCreate ? 'Create' : 'Edit'} Appointment`}>

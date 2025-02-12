@@ -1,23 +1,12 @@
-import { useState } from 'react';
-import updateAppointment from 'services/update-appointment';
+import useUpdateAppointmentGraphql from 'hooks/graphql/use-update-appointment';
+import useUpdateAppointmentRest from 'hooks/rest/use-update-appointment';
 
-export default () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [appointment, setAppointment] = useState<AppointmentUpdateForm>();
+const USE_GRAPHQL = import.meta.env.VITE_USE_GRAPHQL === 'true';
 
-  const mutation = async (data: AppointmentUpdateForm) => {
-    setLoading(true);
+export default (): UseUpdateAppointmentResult => {
+  if (USE_GRAPHQL) {
+    return useUpdateAppointmentGraphql();
+  }
 
-    return updateAppointment(data).then((response) => {
-      setAppointment(response);
-
-      return response;
-    });
-  };
-
-  return {
-    loading,
-    appointment,
-    mutation,
-  };
+  return useUpdateAppointmentRest();
 };

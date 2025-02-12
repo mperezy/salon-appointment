@@ -1,35 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
-import getAppointments from 'services/get-appointments';
+import useAppointmentsGraphql from 'hooks/graphql/use-appointments';
+import useAppointmentsRest from 'hooks/rest/use-appointments';
 
 type Props = {
-  params?: Record<string, string | number>;
+  params?: Record<'id', string>;
   options: {
     enabled?: boolean;
   };
 };
 
-export default ({ params, options: { enabled = true } }: Props) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [appointments, setAppointments] = useState<Appointment[]>();
+const USE_GRAPHQL = import.meta.env.VITE_USE_GRAPHQL === 'true';
 
-  const refetch = useCallback(
-    () =>
-      getAppointments(params).then((appointments) => {
-        setAppointments(appointments);
-        setLoading(false);
-      }),
-    []
-  );
+export default ({ params, options: { enabled = true } }: Props): UseAppointmentsResult => {
+  if (USE_GRAPHQL) {
+    return useAppointmentsGraphql(params?.id ?? null, !enabled);
+  }
 
-  useEffect(() => {
-    if (enabled) {
-      refetch().then();
-    }
-  }, []);
-
-  return {
-    loading,
-    refetch,
-    appointments,
-  };
+  return useAppointmentsRest({ params, options: { enabled } });
 };

@@ -1,19 +1,12 @@
-import { useEffect, useState } from 'react';
-import getServices from 'services/get-services';
+import useServicesGraphql from 'hooks/graphql/use-services';
+import useServicesRest from 'hooks/rest/use-services';
 
-export default () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [services, setServices] = useState<Service[]>();
+const USE_GRAPHQL = import.meta.env.VITE_USE_GRAPHQL === 'true';
 
-  useEffect(() => {
-    getServices().then((services) => {
-      setServices(services);
-      setLoading(false);
-    });
-  }, []);
+export default (): UseServicesResult => {
+  if (USE_GRAPHQL) {
+    return useServicesGraphql();
+  }
 
-  return {
-    loading,
-    services,
-  };
+  return useServicesRest();
 };

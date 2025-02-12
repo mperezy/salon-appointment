@@ -1,6 +1,6 @@
-import { ModalProps } from 'react-responsive-modal';
+import type { ModalProps } from 'react-responsive-modal';
 import Modal from 'components/modal';
-import useDeleteAppointment from 'hooks/use-delete-appointment';
+import useDeleteAppointment from 'hooks/rest/use-delete-appointment';
 
 type Props = ModalProps & {
   appointmentId: number;

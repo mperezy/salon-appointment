@@ -1,23 +1,12 @@
-import { useState } from 'react';
-import createAppointment from 'services/create-appointment';
+import useCreateAppointmentGraphql from 'hooks/graphql/use-create-appointment';
+import useCreateAppointmentRest from 'hooks/rest/use-create-appointment';
 
-export default () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [appointment, setAppointment] = useState<Appointment>();
+const USE_GRAPHQL = import.meta.env.VITE_USE_GRAPHQL === 'true';
 
-  const mutation = async (data: AppointmentForm) => {
-    setLoading(true);
+export default (): UseCreateAppointmentResult => {
+  if (USE_GRAPHQL) {
+    return useCreateAppointmentGraphql();
+  }
 
-    return createAppointment(data).then((response) => {
-      setAppointment(response);
-
-      return response;
-    });
-  };
-
-  return {
-    loading,
-    appointment,
-    mutation,
-  };
+  return useCreateAppointmentRest();
 };
