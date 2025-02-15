@@ -1,12 +1,32 @@
 {
   "name": "salon-appointment",
   "version": "1.0.0",
+  "private": true,
   "description": "Salon appointment challenge",
   "main": "index.js",
   "scripts": {
-    "dev": "cd app; vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "prisma:db:pull": "turbo prisma:db:pull --filter=salon-appointment_server",
+    "prisma:db:generate": "turbo prisma:db:generate --filter=salon-appointment_server",
+    "graphql:generate": "turbo graphql:generate --filter=salon-appointment_server"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "packageManager": "yarn@1.22.22",
+  "workspaces": [
+    "app",
+    "server"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.1",
+    "turbo": "^2.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0"
+  }
 }

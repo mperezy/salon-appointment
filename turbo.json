@@ -1,0 +1,24 @@
+{
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "cache": false
+    },
+    "prisma:db:pull": {
+      "dependsOn": ["^prisma:db:pull"],
+      "cache": false
+    },
+    "prisma:db:generate": {
+      "dependsOn": ["^prisma:db:generate"],
+      "cache": false
+    },
+    "graphql:generate": {
+      "dependsOn": ["^graphql:generate"],
+      "cache": false
+    }
+  }
+}

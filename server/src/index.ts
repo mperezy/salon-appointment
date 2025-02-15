@@ -1,35 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { expressMiddleware } from '@apollo/server/express4';
-import graphqlServer from 'graphql-server';
-import context from 'graphql-server/context';
-import appointmentsRouter from 'routes/appointments';
-import servicesRouter from 'routes/services';
+import apiRouter, { cleanUpGraphqlServer } from 'routes/api';
 
 const app = express();
-
-await graphqlServer.start();
-
-const cleanUpServer = async () => {
-  await graphqlServer.stop();
-};
 
 app.use(express.json());
 app.use(cors({ origin: '*' }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-// routes
-app.use('/appointments', appointmentsRouter);
-app.use('/services', servicesRouter);
-app.use(
-  '/graphql',
-  cors<cors.CorsRequest>(),
-  express.json(),
-  expressMiddleware(graphqlServer, {
-    context,
-  })
-);
+// API router
+app.use('/api', apiRouter);
 
 // Do not exit error on any exception
 // Reference: https://stackoverflow.com/questions/4213351/make-node-js-not-exit-on-error
@@ -46,7 +27,7 @@ const server = app.listen(4000, () => {
 const shutdown = async () => {
   // eslint-disable-next-line no-console
   console.log('Closing server...');
-  await cleanUpServer();
+  await cleanUpGraphqlServer();
 
   server.close(() => {
     // eslint-disable-next-line no-console

@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "salon-appointment_server",
   "version": "1.0.0",
   "description": "A quick server",
   "main": "index.js",
@@ -35,16 +35,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.8",
-    "@eslint/js": "^9.19.0",
     "@graphql-codegen/cli": "^5.0.4",
     "@types/cors": "^2.8.17",
     "@types/morgan": "^1.9.9",
     "@types/pg": "^8.11.11",
-    "eslint": "^9.19.0",
-    "globals": "^15.14.0",
-    "prettier": "^3.4.2",
-    "prisma": "^6.3.1",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.23.0"
+    "prisma": "^6.3.1"
   }
 }

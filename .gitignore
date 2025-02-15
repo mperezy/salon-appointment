@@ -3,6 +3,7 @@ local
 .idx/.data
 .idea
 .env
+.turbo
 db/postgres-server/
 db/pgadmin/
 
