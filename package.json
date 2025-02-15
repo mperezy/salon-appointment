@@ -4,9 +4,14 @@
   "private": true,
   "description": "Salon appointment challenge",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "build": "turbo build",
+    "build:app": "turbo build --filter=salon-appointment_app",
+    "prod": "VITE_APP_MODE=PROD turbo dev --filter=salon-appointment_server",
+    "build:and:prod": "yarn build:app ; yarn prod",
     "prisma:db:pull": "turbo prisma:db:pull --filter=salon-appointment_server",
     "prisma:db:generate": "turbo prisma:db:generate --filter=salon-appointment_server",
     "graphql:generate": "turbo graphql:generate --filter=salon-appointment_server"

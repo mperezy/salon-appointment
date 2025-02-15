@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import apiRouter, { cleanUpGraphqlServer } from 'routes/api';
+import frontendRouter from 'routes/frontend';
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 // API router
 app.use('/api', apiRouter);
+
+// Frontend router
+app.use(frontendRouter);
 
 // Do not exit error on any exception
 // Reference: https://stackoverflow.com/questions/4213351/make-node-js-not-exit-on-error

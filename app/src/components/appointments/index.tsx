@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import AppointmentModal from 'components/appointments/modals';
 import useAppointments from 'hooks/use-appointments';
 
@@ -38,6 +39,12 @@ export default () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex' }}>
+        <Link to='/'>
+          <button>Go home</button>
+        </Link>
+      </div>
+
       <h2>This is the appointment list</h2>
 
       <div style={{ display: 'flex' }}>

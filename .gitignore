@@ -4,6 +4,7 @@ local
 .idea
 .env
 .turbo
+dist
 db/postgres-server/
 db/pgadmin/
 

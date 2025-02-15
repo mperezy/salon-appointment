@@ -7,7 +7,7 @@ import { RouterProvider } from 'react-router';
 import router from 'routes';
 
 const client = new ApolloClient({
-  uri: `${import.meta.env.VITE_API_URL}/graphql`,
+  uri: `${import.meta.env.VITE_API_URI}/graphql`,
   cache: new InMemoryCache(),
 });
 

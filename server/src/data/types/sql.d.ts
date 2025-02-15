@@ -7,7 +7,7 @@ type SalonSQL = {
 type ServiceSQL = {
   id: number;
   salon_id: number;
-  name: stirng;
+  name: string;
   price: number;
 };
 

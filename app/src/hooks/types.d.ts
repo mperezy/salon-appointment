@@ -2,7 +2,7 @@ type UseAppointmentsResult = {
   appointments?: Appointment[];
   loading: boolean;
   // eslint-disable  @typescript-eslint/no-explicit-any
-  refetch: (() => Promise<void>) | ((variables?: Partial<never>) => Promise<never>);
+  refetch: (() => Promise<void>) | ((variables?: Partial<never>) => Promise<any>);
 };
 
 type UseCreateAppointmentResult = {

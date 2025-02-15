@@ -1,12 +1,22 @@
 {
+  "globalEnv": ["VITE_APP_MODE"],
   "tasks": {
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["VITE_APP_MODE"]
     },
     "lint": {
       "dependsOn": ["^lint"],
       "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "cache": true,
+      "outputs": ["dist/**"]
+    },
+    "prod": {
+      "dependsOn": ["^prod"]
     },
     "prisma:db:pull": {
       "dependsOn": ["^prisma:db:pull"],

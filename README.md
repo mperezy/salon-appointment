@@ -185,11 +185,13 @@ The frontend was build using Vite.js with Typescript as main language.
 - You will need to set the dotenv file with the next:
 
 ```dotenv
-VITE_API_URL=/api
+VITE_API_BASE_URL=http://localhost:4000
+VITE_API_URI=/api
 ```
 
-- Why `VITE_API_URL=/api`?, since the power of the monorepo, we are able to set a proxy server to forward
-  `/api` to the server's URL.
+- Why `VITE_API_URI=/api`?, since the power of the monorepo, we are able to set a proxy server to forward
+  `/api` to the server URL.
+- And the server URL will be saved in the variable `VITE_API_BASE_URL`.
 
 ## API connection
 
@@ -198,7 +200,7 @@ VITE_API_URL=/api
   the env variable `VITE_USE_GRAPHQL`:
 
 ```dotenv
-VITE_API_URL=/api
+VITE_API_URI=/api
 VITE_USE_GRAPHQL=true
 ```
 
@@ -214,3 +216,29 @@ $ yarn dev
 ```
 
 - The server will be running at [http://localhost:4000](http://localhost:4000) and the web app at [http://localhost:3000](http://localhost:3000).
+
+# Run the fullstack app in PRODUCTION mode ! 🚀
+
+- Once you followed all steps above for both backend and frontend, just execute:
+
+```shell
+$ yarn build:app
+$ yarn prod
+```
+
+- The above will build the Vite React app into compiled HTML and assets and the server will serve the frontend at '/' path.
+
+- The fullstack app will be running at [http://localhost:4000](http://localhost:4000) in `production`
+  mode, and index page will render the React app.
+
+# Optional
+
+- In case you were running the entire app in `production` mode and want to go back to running in
+  `development` mode, you previously must set the next in the `.env` file:
+
+```dotenv
+FRONTEND_URL="http://localhost:5173" # Where the React app is runinng in development mode.
+```
+
+- Doing the above, if in browser you had [http://localhost:4000](http://localhost:4000), it will be redirected
+  to [http://localhost:5173](http://localhost:5173).

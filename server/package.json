@@ -7,6 +7,8 @@
   "scripts": {
     "check-types": "tsc --noemit",
     "lint": " yarn check-types && eslint src/",
+    "build": "tsc ; tsc-alias",
+    "prod": "node --env-file=.env dist/index.js",
     "dev": "node --env-file=.env --watch-path=./src --experimental-transform-types --import tsx --require tsconfig-paths/register src/index.ts",
     "prisma:db:pull": "echo \"**** Introspecting DB schema which means will get all database schema into src/prisma/schema.prisma file.\" ; npx prisma db pull",
     "prisma:db:generate": "echo \"**** Generating types\" ; npx prisma generate",

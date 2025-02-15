@@ -10,8 +10,6 @@ export default (id: string | null = null, enabled?: boolean): UseAppointmentsRes
     },
   });
 
-  queryState.refetch().then();
-
   return {
     ...queryState,
     appointments: queryState?.data?.appointmentQueryList,
