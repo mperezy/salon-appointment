@@ -88,7 +88,7 @@ $ docker compose up
 
 ```shell
 # Replace $PG_USER with your user name
-$ docker salon_appointment-psql exec -it psql -U $PG_USER -d salon_appointment -f /db-scripts/db-salon.sql
+$ docker exec -it salon_appointment-psql psql -U $PG_USER -d salon_appointment -f /db-scripts/db-salon.sql
 ```
 
 - Then you will need to fill up the env vars:

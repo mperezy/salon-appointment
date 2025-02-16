@@ -13,8 +13,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db/scripts:/db-scripts
-      - ./db/postgres-server:/var/lib/postgresql/data
+      - ./db/scripts:/db-scripts:rw
+      - ./db/postgres-server:/var/lib/postgresql/data:rw
 
   pgadmin:
     image: dpage/pgadmin4
@@ -26,6 +26,6 @@ services:
     ports:
       - "4001:80"
     volumes:
-      - ./db/pgadmin:/var/lib/pgadmin
+      - ./db/pgadmin:/var/lib/pgadmin:rw
     depends_on:
       - salon_appointment-psql

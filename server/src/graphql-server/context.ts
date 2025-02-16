@@ -7,7 +7,7 @@ export type Context = {
 
 export default async (): Promise<Context> => {
   // eslint-disable-next-line no-console
-  console.log('Context triggered');
+  console.log('**** GraphQL API - Prisma Context triggered.');
 
   return {
     prisma,
