@@ -5,7 +5,8 @@
   channel = "stable-23.11"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.nodejs_20
+    pkgs.nodejs_21
+    pkgs.openssl.dev
   ];
 
   # Sets environment variables in the workspace
@@ -30,7 +31,7 @@
     workspace = {
       # Runs when a workspace is first created
       onCreate = {
-        npm-install = "cd app && npm ci --no-audit --prefer-offline --no-progress --timing";
+        # npm-install = "yarn install";
         default.openFiles = [
           "README.md" "create.sql" "example.sql"
         ];
@@ -41,11 +42,14 @@
           psql --dbname=postgres -c "CREATE DATABASE appointments;"
           psql --dbname=appointments -f create.sql
           psql --dbname=appointments -f example.sql
+          psql --dbname=postgres -c "CREATE DATABASE salon_appointment;"
+          psql --dbname=salon_appointment -U $PG_USER -d salon_appointment -f db/scripts/db-salon.sql
         '';
       };
       # Runs when the workspace is (re)started
       onStart = {
-        npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing && cd app && npm ci --no-audit --prefer-offline --no-progress --timing";
+        npm-install = "yarn install";
+        # npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing && cd app && npm ci --no-audit --prefer-offline --no-progress --timing";
         # typescript-build = "tsc";
       };
     };
@@ -57,7 +61,8 @@
         web = {
           # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
           # and show it in IDX's web preview panel
-          command = ["npm" "run" "dev"  "--" "--port" "$PORT" "--host" "0.0.0.0"];
+          # command = ["npm" "run" "dev"  "--" "--port" "$PORT" "--host" "0.0.0.0"];
+          # command = ["yarn" "dev" "0.0.0.0"];
           manager = "web";
         };
       };
