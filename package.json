@@ -6,6 +6,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "app": "yarn workspace salon-appointment_app",
+    "server": "yarn workspace salon-appointment_server",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "build": "turbo build",

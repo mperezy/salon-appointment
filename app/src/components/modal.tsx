@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
-import type { ModalProps } from 'react-responsive-modal';
-import { Modal } from 'react-responsive-modal';
+import type { ModalProps } from '@mantine/core';
+import { Box } from '@mantine/core';
+import { Flex } from '@mantine/core';
+import { Modal, Title } from '@mantine/core';
 
 type Props = ModalProps & {
   title: string;
@@ -10,19 +12,14 @@ type Props = ModalProps & {
 export default ({ title, children, ...props }: Props) => (
   <Modal
     {...props}
-    closeOnOverlayClick={false}
-    center
-    styles={{
-      root: {
-        color: '#242424',
-      },
-      modal: {
-        borderRadius: '.75rem',
-        padding: '1rem 2.5rem 2.5rem',
-      },
-    }}
+    closeOnClickOutside={false}
+    centered
+    title={
+      <Flex p='sm'>
+        <Title order={2}>{title}</Title>
+      </Flex>
+    }
   >
-    <h2>{title}</h2>
-    {children}
+    <Box p='1rem 2.5rem 2.5rem'>{children}</Box>
   </Modal>
 );

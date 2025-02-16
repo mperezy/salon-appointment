@@ -1,4 +1,8 @@
-import type { ModalProps } from 'react-responsive-modal';
+import type { ModalProps } from '@mantine/core';
+import { Text } from '@mantine/core';
+import { Flex } from '@mantine/core';
+import { Stack } from '@mantine/core';
+import { Button } from '@mantine/core';
 import Modal from 'components/modal';
 import useDeleteAppointment from 'hooks/rest/use-delete-appointment';
 
@@ -9,8 +13,7 @@ type Props = ModalProps & {
 };
 
 export default ({ appointmentId, customerName, refetch, ...props }: Props) => {
-  const { mutation } = useDeleteAppointment();
-
+  const { mutation, loading } = useDeleteAppointment();
   const handleNoButton = () => props.onClose();
 
   const handleYesButton = async () => {
@@ -21,18 +24,19 @@ export default ({ appointmentId, customerName, refetch, ...props }: Props) => {
 
   return (
     <Modal {...props} title='Delete Appointment'>
-      <div style={{ display: 'flex', flexDirection: 'column', rowGap: '1rem' }}>
-        <div>Are you sure want to delete this appointment for customer "{customerName}" ?</div>
+      <Stack gap='1rem'>
+        <Text>Are you sure want to delete this appointment for customer "{customerName}" ?</Text>
 
-        <div style={{ display: 'flex', columnGap: '.75rem', alignSelf: 'flex-end' }}>
-          <button style={{ backgroundColor: 'grey' }} onClick={handleNoButton}>
+        <Flex w='100%' columnGap='.75rem' justify='flex-end'>
+          <Button color='gray' onClick={handleNoButton} disabled={loading}>
             No
-          </button>
-          <button style={{ backgroundColor: 'red' }} onClick={handleYesButton}>
+          </Button>
+
+          <Button color='red' onClick={handleYesButton} disabled={loading} loading={loading}>
             Yes
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </Stack>
     </Modal>
   );
 };

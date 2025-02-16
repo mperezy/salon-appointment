@@ -1,10 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import './index.css';
-import 'react-responsive-modal/styles.css';
+import { IconContext } from 'react-icons';
 import { RouterProvider } from 'react-router';
-import router from 'routes';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import router from 'router';
 
 const client = new ApolloClient({
   uri: `${import.meta.env.VITE_API_URI}/graphql`,
@@ -14,7 +15,11 @@ const client = new ApolloClient({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={client}>
-      <RouterProvider router={router} />
+      <IconContext.Provider value={{ size: '1.15rem' }}>
+        <MantineProvider defaultColorScheme='dark'>
+          <RouterProvider router={router} />
+        </MantineProvider>
+      </IconContext.Provider>
     </ApolloProvider>
   </StrictMode>
 );

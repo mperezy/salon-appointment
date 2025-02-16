@@ -1,5 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import {
+  MdListAlt,
+  MdOutlineAdd,
+  MdOutlineDelete,
+  MdOutlineEdit,
+  MdOutlineHome,
+} from 'react-icons/md';
+import { Box, Button, Flex, Stack, Title, Text, List, Loader } from '@mantine/core';
 import AppointmentModal from 'components/appointments/modals';
 import useAppointments from 'hooks/use-appointments';
 
@@ -38,107 +46,115 @@ export default () => {
     setModalOpen((prevState) => ({ ...prevState, appointmentId, [modal]: open }));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex' }}>
-        <Link to='/'>
-          <button>Go home</button>
-        </Link>
-      </div>
+    <Box h='100vh' py='xl'>
+      <Stack h='100%'>
+        <Flex>
+          <Button id='button' component={Link} to='/' leftSection={<MdOutlineHome />}>
+            Go home
+          </Button>
+        </Flex>
 
-      <h2>This is the appointment list</h2>
+        <Flex columnGap='1rem' align='center' justify='center'>
+          <MdListAlt size='5rem' />
+          <Title order={2} style={{ fontSize: '3rem' }}>
+            Appointments
+          </Title>
+        </Flex>
 
-      <div style={{ display: 'flex' }}>
-        <button onClick={() => handleModal({ modal: 'create' })}>Create new appointment</button>
-      </div>
+        <Flex>
+          <Button
+            color='green'
+            onClick={() => handleModal({ modal: 'create' })}
+            leftSection={<MdOutlineAdd />}
+          >
+            Create new appointment
+          </Button>
+        </Flex>
 
-      {loading && <span>Fetching appointments...</span>}
+        <Stack h='100%' /* mt='2rem' */ gap='1.5rem' style={{ overflowY: 'auto' }}>
+          {loading && (
+            <Flex h='100%' columnGap='xs' align='center' justify='center'>
+              <Loader size='sm' />
+              <Text>Fetching appointments...</Text>
+            </Flex>
+          )}
+          {appointments &&
+            appointments.map(({ id, customerName, services }) => (
+              <Flex key={id} columnGap='1.5rem' justify='center' align='flex-start'>
+                <Stack align='flex-start'>
+                  <Text>{`Appointment [${id}] for client: ${customerName}`}</Text>
 
-      <div
-        style={{ display: 'flex', flexDirection: 'column', rowGap: '1.5rem', marginTop: '2rem' }}
-      >
-        {appointments &&
-          appointments.map(({ id, customerName, services }) => (
-            <div
-              key={id}
-              style={{ display: 'flex', columnGap: '1.5rem', alignItems: 'flex-start' }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <span>{`Appointment [${id}] for client: ${customerName}`}</span>
+                  <Stack ml='.7rem' align='flex-start'>
+                    <span>Services:</span>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginLeft: '.75rem',
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <span>Services:</span>
+                    <List pl='2rem'>
+                      {services.map(({ id, name, price, salons }) => (
+                        <List.Item key={id}>
+                          {name} for ${price} at{' '}
+                          {salons.map(({ name, location }) => `${name} - ${location}`).join(', ')}
+                        </List.Item>
+                      ))}
+                    </List>
+                  </Stack>
+                </Stack>
 
-                  <ul style={{ margin: 0 }}>
-                    {services.map(({ id, name, price, salons }) => (
-                      <li key={id}>
-                        {name} for ${price} at{' '}
-                        {salons.map(({ name, location }) => `${name} - ${location}`).join(', ')}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+                <Flex columnGap='.5rem' align='center'>
+                  <Button
+                    color='yellow'
+                    onClick={() => handleModal({ modal: 'edit', appointmentId: id })}
+                    leftSection={<MdOutlineEdit />}
+                  >
+                    Edit
+                  </Button>
 
-              <div style={{ display: 'flex', columnGap: '.5rem', alignItems: 'center' }}>
-                <button
-                  style={{ backgroundColor: '#D1AA4D' }}
-                  onClick={() => handleModal({ modal: 'edit', appointmentId: id })}
-                >
-                  Edit
-                </button>
+                  <Button
+                    color='red'
+                    onClick={() => handleModal({ modal: 'delete', appointmentId: id })}
+                    leftSection={<MdOutlineDelete />}
+                  >
+                    Delete
+                  </Button>
+                </Flex>
+              </Flex>
+            ))}
+        </Stack>
 
-                <button
-                  style={{ backgroundColor: '#D14141' }}
-                  onClick={() => handleModal({ modal: 'delete', appointmentId: id })}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-      </div>
+        {modalCreateOpen && (
+          <AppointmentModal.CreateEdit
+            isCreate
+            // TODO: Should I need to pass an appointment id when creating a new one ?
+            appointmentId={appointmentId}
+            opened={modalCreateOpen}
+            refetch={async () => {
+              await refetch();
+            }}
+            onClose={() => handleModal({ modal: 'create', open: false })}
+          />
+        )}
 
-      {modalCreateOpen && (
-        <AppointmentModal.CreateEdit
-          isCreate
-          appointmentId={appointmentId}
-          open={modalCreateOpen}
-          refetch={async () => {
-            await refetch();
-          }}
-          onClose={() => handleModal({ modal: 'create', open: false })}
-        />
-      )}
+        {modalEditOpen && (
+          <AppointmentModal.CreateEdit
+            appointmentId={appointmentId}
+            opened={modalEditOpen}
+            refetch={async () => {
+              await refetch();
+            }}
+            onClose={() => handleModal({ modal: 'edit', open: false })}
+          />
+        )}
 
-      {modalEditOpen && (
-        <AppointmentModal.CreateEdit
-          appointmentId={appointmentId}
-          open={modalEditOpen}
-          refetch={async () => {
-            await refetch();
-          }}
-          onClose={() => handleModal({ modal: 'edit', open: false })}
-        />
-      )}
-
-      {modalDeleteOpen && appointments && (
-        <AppointmentModal.Delete
-          appointmentId={appointmentId}
-          open={modalDeleteOpen}
-          refetch={async () => {
-            await refetch();
-          }}
-          customerName={appointments.find(({ id }) => id === appointmentId)?.customerName ?? ''}
-          onClose={() => handleModal({ modal: 'delete', open: false })}
-        />
-      )}
-    </div>
+        {modalDeleteOpen && appointments && (
+          <AppointmentModal.Delete
+            appointmentId={appointmentId}
+            opened={modalDeleteOpen}
+            refetch={async () => {
+              await refetch();
+            }}
+            customerName={appointments.find(({ id }) => id === appointmentId)?.customerName ?? ''}
+            onClose={() => handleModal({ modal: 'delete', open: false })}
+          />
+        )}
+      </Stack>
+    </Box>
   );
 };

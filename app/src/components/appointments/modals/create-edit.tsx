@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { ModalProps } from 'react-responsive-modal';
+import { MdOutlineSave } from 'react-icons/md';
+import type { ModalProps } from '@mantine/core';
+import { Button, Flex, Loader, NumberInput, Select, Text, TextInput } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import Modal from 'components/modal';
 import useServices from 'hooks/use-services';
 import useCreateAppointment from 'hooks/use-create-appointment';
@@ -25,10 +28,13 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
       enabled: !isCreate,
     },
   });
-  const { mutation } = useCreateAppointment();
-  const { mutation: updateMutation } = useUpdateAppointment();
+  const { mutation, loading: createLoading } = useCreateAppointment();
+  const { mutation: updateMutation, loading: updateLoading } = useUpdateAppointment();
+  const createEditLoading = createLoading || updateLoading;
+
   const [form, setForm] = useState<Omit<AppointmentForm, 'service_id'>>(defaultForm);
   const [service, setService] = useState<string>('-1');
+  const formDisabled = !form.customerName || form.appointmentTime === -1 || service === '-1';
   const servicePrice = services?.find(({ id }) => id === Number(service))?.price;
 
   const handleSubmit = async () => {
@@ -76,63 +82,66 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
 
   return (
     <Modal {...props} title={`${isCreate ? 'Create' : 'Edit'} Appointment`}>
-      {loading && <span>Loading services</span>}
+      {loading && (
+        <Flex columnGap='xs' align='center'>
+          <Loader size='sm' />
+          <Text>Loading services</Text>
+        </Flex>
+      )}
 
       {services && (
-        <div style={{ display: 'flex', flexDirection: 'column', rowGap: '.75rem' }}>
-          <label style={{ display: 'flex', columnGap: '.5rem', alignItems: 'center' }}>
-            <b>Customer name:</b>
-            <input
-              type='text'
-              value={form?.customerName}
-              onChange={({ currentTarget: { value } }) =>
-                setForm((prevState) => ({
-                  ...prevState,
-                  customerName: value,
-                }))
-              }
-            />
-          </label>
+        <Stack gap='.75rem'>
+          <TextInput
+            label='Customer name:'
+            placeholder="Enter the customer's name..."
+            value={form?.customerName}
+            onChange={({ currentTarget: { value } }) =>
+              setForm((prevState) => ({
+                ...prevState,
+                customerName: value,
+              }))
+            }
+          />
 
-          <label style={{ display: 'flex', columnGap: '.5rem', alignItems: 'center' }}>
-            <b>time:</b>
-            <input
-              type='number'
-              min={1}
-              value={form.appointmentTime === -1 ? '' : form.appointmentTime}
-              onChange={({ currentTarget: { value } }) =>
-                setForm((prevState) => ({
-                  ...prevState,
-                  appointmentTime: Number(value),
-                }))
-              }
-            />
-          </label>
+          <NumberInput
+            hideControls
+            label='Time:'
+            placeholder='Enter duration of appointment in minutes...'
+            min={1}
+            value={form.appointmentTime === -1 ? '' : form.appointmentTime}
+            onChange={(value) =>
+              setForm((prevState) => ({
+                ...prevState,
+                appointmentTime: Number(value),
+              }))
+            }
+          />
 
-          <label style={{ display: 'flex', columnGap: '.5rem', alignItems: 'center' }}>
-            <b>Service:</b>
-            <select value={service} onChange={({ currentTarget: { value } }) => setService(value)}>
-              <option value='-1'>Select a service</option>
+          <Select
+            label='Service:'
+            placeholder='Select a service'
+            data={services.map(({ id, name }) => ({ value: String(id), label: name }))}
+            onChange={(value) => value && setService(value)}
+          />
 
-              {services.map(({ id, name }) => (
-                <option key={id} value={id}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <TextInput
+            disabled
+            label='Price:'
+            value={servicePrice ? `$${servicePrice}` : '-- No service selected --'}
+          />
 
-          <label style={{ display: 'flex', columnGap: '.5rem', alignItems: 'center' }}>
-            <b>Price:</b> {servicePrice ? `$${servicePrice}` : '-- No service selected --'}
-          </label>
-
-          <button
-            style={{ alignSelf: 'flex-end', backgroundColor: '#325A85' }}
-            onClick={handleSubmit}
-          >
-            {isCreate ? 'Create' : 'Save'}
-          </button>
-        </div>
+          <Flex w='100%' justify='flex-end'>
+            <Button
+              color='#325A85'
+              onClick={handleSubmit}
+              disabled={formDisabled}
+              loading={createEditLoading}
+              leftSection={<MdOutlineSave />}
+            >
+              {isCreate ? 'Create' : 'Save'}
+            </Button>
+          </Flex>
+        </Stack>
       )}
     </Modal>
   );
