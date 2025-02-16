@@ -61,7 +61,7 @@ export default () => {
           </Title>
         </Flex>
 
-        <Flex>
+        <Flex justify='flex-end'>
           <Button
             color='green'
             onClick={() => handleModal({ modal: 'create' })}
@@ -71,13 +71,14 @@ export default () => {
           </Button>
         </Flex>
 
-        <Stack h='100%' /* mt='2rem' */ gap='1.5rem' style={{ overflowY: 'auto' }}>
+        <Stack h='100%' my='2rem' gap='1.5rem' style={{ overflowY: 'auto' }}>
           {loading && (
             <Flex h='100%' columnGap='xs' align='center' justify='center'>
               <Loader size='sm' />
               <Text>Fetching appointments...</Text>
             </Flex>
           )}
+
           {appointments &&
             appointments.map(({ id, customerName, services }) => (
               <Flex key={id} columnGap='1.5rem' justify='center' align='flex-start'>
@@ -120,10 +121,7 @@ export default () => {
         </Stack>
 
         {modalCreateOpen && (
-          <AppointmentModal.CreateEdit
-            isCreate
-            // TODO: Should I need to pass an appointment id when creating a new one ?
-            appointmentId={appointmentId}
+          <AppointmentModal.Create
             opened={modalCreateOpen}
             refetch={async () => {
               await refetch();
@@ -133,7 +131,7 @@ export default () => {
         )}
 
         {modalEditOpen && (
-          <AppointmentModal.CreateEdit
+          <AppointmentModal.Edit
             appointmentId={appointmentId}
             opened={modalEditOpen}
             refetch={async () => {

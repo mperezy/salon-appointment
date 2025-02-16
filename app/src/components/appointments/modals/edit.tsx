@@ -5,14 +5,12 @@ import { Button, Flex, Loader, NumberInput, Select, Text, TextInput } from '@man
 import { Stack } from '@mantine/core';
 import Modal from 'components/modal';
 import useServices from 'hooks/use-services';
-import useCreateAppointment from 'hooks/use-create-appointment';
 import useUpdateAppointment from 'hooks/use-update-appointment';
 import useAppointments from 'hooks/use-appointments';
 
 type Props = ModalProps & {
   appointmentId: number;
   refetch: () => Promise<void>;
-  isCreate?: boolean;
 };
 
 const defaultForm: Omit<AppointmentForm, 'service_id'> = {
@@ -20,17 +18,13 @@ const defaultForm: Omit<AppointmentForm, 'service_id'> = {
   appointmentTime: -1,
 };
 
-export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
+export default ({ appointmentId, refetch, ...props }: Props) => {
   const { services, loading } = useServices();
   const { appointments } = useAppointments({
-    params: isCreate ? undefined : { id: String(appointmentId) },
-    options: {
-      enabled: !isCreate,
-    },
+    params: { id: String(appointmentId) },
+    options: { enabled: true },
   });
-  const { mutation, loading: createLoading } = useCreateAppointment();
   const { mutation: updateMutation, loading: updateLoading } = useUpdateAppointment();
-  const createEditLoading = createLoading || updateLoading;
 
   const [form, setForm] = useState<Omit<AppointmentForm, 'service_id'>>(defaultForm);
   const [service, setService] = useState<string>('-1');
@@ -39,30 +33,17 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
 
   const handleSubmit = async () => {
     if (form.customerName || form.appointmentTime !== -1) {
-      if (isCreate) {
-        const { appointmentTime, customerName } = form;
+      const { appointmentTime, customerName } = form;
 
-        const appointmentCreated = await mutation({
-          customerName,
-          appointmentTime,
-          service_id: Number(service),
-        });
+      const appointmentUpdated = await updateMutation({
+        id: appointmentId,
+        customerName,
+        appointmentTime,
+        service_id: Number(service),
+      });
 
-        // eslint-disable-next-line no-console
-        console.log({ appointmentCreated });
-      } else {
-        const { appointmentTime, customerName } = form;
-
-        const appointmentUpdated = await updateMutation({
-          id: appointmentId,
-          customerName,
-          appointmentTime,
-          service_id: Number(service),
-        });
-
-        // eslint-disable-next-line no-console
-        console.log({ appointmentUpdated });
-      }
+      // eslint-disable-next-line no-console
+      console.log({ appointmentUpdated });
 
       await refetch();
       props.onClose();
@@ -70,7 +51,7 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
   };
 
   useEffect(() => {
-    if (!isCreate && appointments && appointments.length > 0) {
+    if (appointments && appointments.length > 0) {
       setForm({
         customerName: appointments[0].customerName ?? '',
         appointmentTime: appointments[0].appointmentTime ?? -1,
@@ -78,10 +59,10 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
 
       setService(appointments[0].services?.[0].id.toString());
     }
-  }, [appointments, isCreate]);
+  }, [appointments]);
 
   return (
-    <Modal {...props} title={`${isCreate ? 'Create' : 'Edit'} Appointment`}>
+    <Modal {...props} title='Edit Appointment'>
       {loading && (
         <Flex columnGap='xs' align='center'>
           <Loader size='sm' />
@@ -134,11 +115,11 @@ export default ({ appointmentId, refetch, isCreate, ...props }: Props) => {
             <Button
               color='#325A85'
               onClick={handleSubmit}
-              disabled={formDisabled}
-              loading={createEditLoading}
+              disabled={formDisabled || updateLoading}
+              loading={updateLoading}
               leftSection={<MdOutlineSave />}
             >
-              {isCreate ? 'Create' : 'Save'}
+              Save
             </Button>
           </Flex>
         </Stack>
