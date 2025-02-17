@@ -10,7 +10,7 @@ export default ({ mode }: { mode: string }) => {
     plugins: [react(), tsconfigPaths()],
     server: {
       proxy: {
-        '/api': {
+        [env.VITE_API_URI]: {
           target: env.VITE_API_BASE_URL,
           changeOrigin: true,
         },

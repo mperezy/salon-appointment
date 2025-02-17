@@ -8,11 +8,17 @@ export default (): UseCreateAppointmentResult => {
   const mutation = async (data: AppointmentForm) => {
     setLoading(true);
 
-    return createAppointment(data).then((response) => {
-      setAppointment(response);
+    return createAppointment(data)
+      .then((response) => {
+        setAppointment(response);
 
-      return response;
-    });
+        return response;
+      })
+      .catch((error) =>
+        // eslint-disable-next-line no-console
+        console.log('**** Need to handle errors for [DELETE] /api/appointments', { error })
+      )
+      .finally(() => setLoading(false));
   };
 
   return {

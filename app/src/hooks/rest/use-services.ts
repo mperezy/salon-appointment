@@ -6,10 +6,15 @@ export default (): UseServicesResult => {
   const [services, setServices] = useState<Service[]>();
 
   useEffect(() => {
-    getServices().then((services) => {
-      setServices(services);
-      setLoading(false);
-    });
+    getServices()
+      .then((services) => {
+        setServices(services);
+      })
+      .catch((error) =>
+        // eslint-disable-next-line no-console
+        console.log('**** Need to handle errors for [GET] /api/services', { error })
+      )
+      .finally(() => setLoading(false));
   }, []);
 
   return {

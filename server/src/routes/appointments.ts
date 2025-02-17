@@ -5,11 +5,13 @@ import {
   updateAppointment,
   softDeleteAppointment,
 } from 'data/appointments';
+import delay from 'utils/delay';
 
 const app = express();
 
 app.get('/', async (req: Request, res: Response) => {
   const appointmentId = req.query['id'] as string | undefined;
+  await delay();
   const appointments = await getAppointmentsServicesAndSalons(appointmentId);
 
   res.json(appointments);
@@ -17,6 +19,7 @@ app.get('/', async (req: Request, res: Response) => {
 
 app.post('/', async (req: Request, res: Response) => {
   const { body } = req;
+  await delay();
   const newAppointment = await createAppointment(body);
 
   res.json(newAppointment);
@@ -24,6 +27,7 @@ app.post('/', async (req: Request, res: Response) => {
 
 app.patch('/', async (req: Request, res: Response) => {
   const { body } = req;
+  await delay();
   const appointmentUpdated = await updateAppointment(body);
 
   res.json(appointmentUpdated);
@@ -31,6 +35,7 @@ app.patch('/', async (req: Request, res: Response) => {
 
 app.delete('/', async (req: Request, res: Response) => {
   const appointmentId = req.query['id'] as string;
+  await delay();
   await softDeleteAppointment(Number(appointmentId));
 
   res.sendStatus(204);

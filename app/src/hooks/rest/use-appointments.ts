@@ -14,10 +14,13 @@ export default ({ params, options: { enabled = true } }: Props): UseAppointments
 
   const refetch = useCallback(
     () =>
-      getAppointments(params).then((appointments) => {
-        setAppointments(appointments);
-        setLoading(false);
-      }),
+      getAppointments(params)
+        .then((appointments) => setAppointments(appointments))
+        .catch((error) =>
+          // eslint-disable-next-line no-console
+          console.log('**** Need to handle errors for [GET] /api/appointments', { error })
+        )
+        .finally(() => setLoading(false)),
     [params]
   );
 
@@ -25,7 +28,7 @@ export default ({ params, options: { enabled = true } }: Props): UseAppointments
     if (enabled) {
       refetch().then();
     }
-  }, [enabled, refetch]);
+  }, []);
 
   return {
     loading,

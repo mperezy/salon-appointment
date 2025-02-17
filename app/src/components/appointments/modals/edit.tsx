@@ -19,11 +19,12 @@ const defaultForm: Omit<AppointmentForm, 'service_id'> = {
 };
 
 export default ({ appointmentId, refetch, ...props }: Props) => {
-  const { services, loading } = useServices();
-  const { appointments } = useAppointments({
+  const { services, loading: loadingServices } = useServices();
+  const { appointments, loading: loadingAppointments } = useAppointments({
     params: { id: String(appointmentId) },
     options: { enabled: true },
   });
+  const loading = loadingAppointments || loadingServices;
   const { mutation: updateMutation, loading: updateLoading } = useUpdateAppointment();
 
   const [form, setForm] = useState<Omit<AppointmentForm, 'service_id'>>(defaultForm);
@@ -66,11 +67,11 @@ export default ({ appointmentId, refetch, ...props }: Props) => {
       {loading && (
         <Flex columnGap='xs' align='center'>
           <Loader size='sm' />
-          <Text>Loading services</Text>
+          <Text>Loading appointment and services...</Text>
         </Flex>
       )}
 
-      {services && (
+      {services && appointments && (
         <Stack gap='.75rem'>
           <TextInput
             label='Customer name:'
