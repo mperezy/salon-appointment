@@ -4,7 +4,9 @@
 
 **Task:** Build a Fullstack Application for Salon Appointment Management
 
-You are required to build a fullstack application that allows users to manage salon appointments. This challenge evaluates your proficiency in both frontend and backend development, focusing on GraphQL, PostgreSQL, React, and TypeScript.
+You are required to build a fullstack application that allows users to manage salon appointments.
+This challenge evaluates your proficiency in both frontend and backend development, focusing on
+GraphQL, PostgreSQL, React, and TypeScript.
 
 ### Backend Requirements
 
@@ -14,7 +16,8 @@ You are required to build a fullstack application that allows users to manage sa
 - Mutation: Update an existing appointment's details.
 - Mutation: Delete an appointment.
 
-PostgreSQL Database: Use PostgreSQL to store the appointment data. The database should include the following tables:
+PostgreSQL Database: Use PostgreSQL to store the appointment data. The database should include the
+following tables:
 
 - salons with fields: id, name, location.
 - services with fields: id, salon_id, name, price.
@@ -37,15 +40,16 @@ React Application: Develop a simple React-based frontend that interacts with the
 - Service
 - Appointment Time
 - Integration:
-  - Use Apollo Client to interact with the GraphQL API.
-  - Styling: Style the app minimally using plain CSS or a library like TailwindCSS or Material-UI.
+    - Use Apollo Client to interact with the GraphQL API.
+    - Styling: Style the app minimally using plain CSS or a library like TailwindCSS or Material-UI.
 
 ### Constraints
 
 - You have 30 to 40 minutes to complete this challenge.
 - Use clean code practices and adhere to design patterns.
 - Do not use AI tools to generate the solution.
-- Submit your code in a version-controlled repository (e.g., GitHub, GitLab, or Bitbucket) and share the repository link.
+- Submit your code in a version-controlled repository (e.g., GitHub, GitLab, or Bitbucket) and share
+  the repository link.
 - Include a README file with:
 - Setup instructions.
 - Brief explanation of your approach.
@@ -54,7 +58,8 @@ React Application: Develop a simple React-based frontend that interacts with the
 
 # Monorepo is amazing
 
-- This fullstack repo was improved by using [Turborepo](https://turbo.build/repo/docs) to bring it to next level for better development experience.
+- This fullstack repo was improved by using [Turborepo](https://turbo.build/repo/docs) to bring it
+  to next level for better development experience.
 
 ## Install dependencies
 
@@ -116,7 +121,7 @@ DB_URL="postgresql://admin:admin1234@localhost:5432/salon_appointment?schema=sal
 
 ```shell
 # Nedd to be placed at the root of the project
-$ yarn prisma:db:generate
+$ yarn prisma-orm:db:generate
 ```
 
 - Now all actions will be executed on Prisma ORM instead of Postgres `pg` package.
@@ -124,47 +129,48 @@ $ yarn prisma:db:generate
 ## REST API
 
 - For REST API, the usage for this one is under the next endpoints:
-  - Appointments:
-    - [GET] [http://localhost:4000/appointments](http://localhost:4000/appointments)
-    - [GET] [http://localhost:4000/appointments?id=1](http://localhost:4000/appointments?id=1)
-    - [POST | PATCH | DELETE] [http://localhost:4000/appointments](http://localhost:4000/appointments)
-  - Services:
-    - [GET] [http://localhost:4000/services](http://localhost:4000/services)
+    - Appointments:
+        - [GET] [http://localhost:4000/appointments](http://localhost:4000/appointments)
+        - [GET] [http://localhost:4000/appointments?id=1](http://localhost:4000/appointments?id=1)
+        - [POST | PATCH | DELETE] [http://localhost:4000/appointments](http://localhost:4000/appointments)
+    - Services:
+        - [GET] [http://localhost:4000/services](http://localhost:4000/services)
 
 ## GraphQL API
 
 - For GraphQL API, it uses Prisma ORM by default since Prisma was set on the GraphQL server context.
 - The server is exposed simultaneously with the REST API, the endpoint for GraphQL is:
-  - [http://localhost:4000/graphql](http://localhost:4000/graphql) - This URL can be used to run the playground in the browser.
+    - [http://localhost:4000/graphql](http://localhost:4000/graphql) - This URL can be used to run
+      the playground in the browser.
 - The Queries and Mutations implemented are:
-  - Queries:
-    ```graphql
-    type Query {
-      appointmentQuery(id: Int!): appointments!
-      appointmentQueryList(id: String): [appointmentList!]!
-      salonQuery(id: Int!): salons!
-      serviceAndSalonsQueryList: [serviceAndSalons!]!
-      serviceQuery(id: Int!): services!
-    }
-    ```
-  - Mutations:
-    ```graphql
-    type Mutation {
-      createAppointment(
-        appointmentTime: Float!
-        customerName: String!
-        service_id: Int!
-      ): appointments!
-      recoverAppointment(id: Int!): appointments!
-      softDeleteAppointment(id: Int!): appointments!
-      updateAppointment(
-        appointmentTime: Float!
-        customerName: String!
-        id: Int!
-        service_id: Int!
-      ): appointments!
-    }
-    ```
+    - Queries:
+      ```graphql
+      type Query {
+        appointmentQuery(id: Int!): appointments!
+        appointmentQueryList(id: String): [appointmentList!]!
+        salonQuery(id: Int!): salons!
+        serviceAndSalonsQueryList: [serviceAndSalons!]!
+        serviceQuery(id: Int!): services!
+      }
+      ```
+    - Mutations:
+      ```graphql
+      type Mutation {
+        createAppointment(
+          appointmentTime: Float!
+          customerName: String!
+          service_id: Int!
+        ): appointments!
+        recoverAppointment(id: Int!): appointments!
+        softDeleteAppointment(id: Int!): appointments!
+        updateAppointment(
+          appointmentTime: Float!
+          customerName: String!
+          id: Int!
+          service_id: Int!
+        ): appointments!
+      }
+      ```
 - To generate GraphQL types so the Frontend will be ready to use for useQuery or useMutations, run:
 
 ```shell
@@ -172,7 +178,8 @@ $ yarn prisma:db:generate
 $ yarn graphql:generate
 ```
 
-- These types will be created in the folder [app/src/graphql-generated/](app/src/graphql-generated/).
+- These types will be created in the
+  folder [app/src/graphql-generated/](app/src/graphql-generated/).
 
 <!-- - The server will be running at [http://localhost:4000](http://localhost:4000). -->
 
@@ -189,7 +196,8 @@ VITE_API_BASE_URL=http://localhost:4000
 VITE_API_URI=/api
 ```
 
-- Why `VITE_API_URI=/api`?, since the power of the monorepo, we are able to set a proxy server to forward
+- Why `VITE_API_URI=/api`?, since the power of the monorepo, we are able to set a proxy server to
+  forward
   `/api` to the server URL.
 - And the server URL will be saved in the variable `VITE_API_BASE_URL`.
 
@@ -215,20 +223,25 @@ VITE_USE_GRAPHQL=true
 $ yarn dev
 ```
 
-- The server will be running at [http://localhost:4000](http://localhost:4000) and the web app at [http://localhost:3000](http://localhost:3000).
+- The server will be running at [http://localhost:4000](http://localhost:4000) and the web app
+  at [http://localhost:3000](http://localhost:3000).
 
 # Run the fullstack app in PRODUCTION mode ! 🚀
 
 - Once you followed all steps above for both backend and frontend, just execute:
 
 ```shell
-$ yarn build:app
-$ yarn prod
+$ yarn build
+$ yarn start
+# or just
+$ yarn build:and:start
 ```
 
-- The above will build the Vite React app into compiled HTML and assets and the server will serve the frontend at '/' path.
+- The above will build Nodejs app in JavaScript files and the Vite React app into compiled HTML
+  and assets and the server will serve the frontend at '/' path.
 
-- The fullstack app will be running at [http://localhost:4000](http://localhost:4000) in `production`
+- The fullstack app will be running at [http://localhost:4000](http://localhost:4000) in
+  `production`
   mode, and index page will render the React app.
 
 # Optional
@@ -240,5 +253,6 @@ $ yarn prod
 FRONTEND_URL="http://localhost:5173" # Where the React app is runinng in development mode.
 ```
 
-- Doing the above, if in browser you had [http://localhost:4000](http://localhost:4000), it will be redirected
+- Doing the above, if in browser you had [http://localhost:4000](http://localhost:4000), it will be
+  redirected
   to [http://localhost:5173](http://localhost:5173).

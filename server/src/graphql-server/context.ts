@@ -1,5 +1,5 @@
-import type { PrismaClient } from 'prisma/generated';
-import prisma from 'prisma';
+import type { PrismaClient } from 'prisma-orm/generated';
+import prisma from 'prisma-orm';
 
 export type Context = {
   prisma: PrismaClient;

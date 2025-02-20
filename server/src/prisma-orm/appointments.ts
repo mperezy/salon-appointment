@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from 'prisma/generated';
+import type { Prisma, PrismaClient } from 'prisma-orm/generated';
 
 export type PrismaAppointmentMutationResult = Omit<AppointmentSQL, 'appointmentTime'> & {
   appointmentTime: Prisma.Decimal;

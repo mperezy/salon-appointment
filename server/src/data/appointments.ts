@@ -5,8 +5,8 @@ const USE_PRISMA = process.env.USE_PRISMA === 'true';
 export const getAppointmentsServicesAndSalons = async (id?: string): Promise<Appointment[]> => {
   try {
     if (USE_PRISMA) {
-      const prismaClient = await import('../prisma').then((result) => result.default);
-      const appointmentsPrisma = await import('../prisma/appointments').then(
+      const prismaClient = await import('../prisma-orm').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma-orm/appointments').then(
         (result) => result.default
       );
 
@@ -24,8 +24,8 @@ export const getAppointmentsServicesAndSalons = async (id?: string): Promise<App
 export const createAppointment = async (appointment: Omit<AppointmentSQL, 'id' | 'isDeleted'>) => {
   try {
     if (USE_PRISMA) {
-      const prismaClient = await import('../prisma').then((result) => result.default);
-      const appointmentsPrisma = await import('../prisma/appointments').then(
+      const prismaClient = await import('../prisma-orm').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma-orm/appointments').then(
         (result) => result.default
       );
       return await appointmentsPrisma(prismaClient).createAppointment(appointment);
@@ -42,8 +42,8 @@ export const createAppointment = async (appointment: Omit<AppointmentSQL, 'id' |
 export const updateAppointment = async (appointment: Omit<AppointmentSQL, 'isDeleted'>) => {
   try {
     if (USE_PRISMA) {
-      const prismaClient = await import('../prisma').then((result) => result.default);
-      const appointmentsPrisma = await import('../prisma/appointments').then(
+      const prismaClient = await import('../prisma-orm').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma-orm/appointments').then(
         (result) => result.default
       );
       return await appointmentsPrisma(prismaClient).updateAppointment(appointment);
@@ -60,8 +60,8 @@ export const updateAppointment = async (appointment: Omit<AppointmentSQL, 'isDel
 export const softDeleteAppointment = async (id: number) => {
   try {
     if (USE_PRISMA) {
-      const prismaClient = await import('../prisma').then((result) => result.default);
-      const appointmentsPrisma = await import('../prisma/appointments').then(
+      const prismaClient = await import('../prisma-orm').then((result) => result.default);
+      const appointmentsPrisma = await import('../prisma-orm/appointments').then(
         (result) => result.default
       );
       return await appointmentsPrisma(prismaClient).softDeleteAppointment(id);

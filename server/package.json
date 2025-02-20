@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "check-types": "tsc --noemit",
-    "lint": " yarn check-types && eslint src/",
-    "build": "tsc ; tsc-alias",
-    "prod": "node --env-file=.env dist/index.js",
+    "lint": "yarn check-types && eslint src/",
+    "generate:and:copy": "yarn prisma:db:generate ; yarn graphql:generate ; node copy-generated-files.js",
+    "build": "tsc ; tsc-alias --resolve-full-paths --resolve-full-extension .js ; yarn generate:and:copy",
+    "start": "SERVER_IS_DEV=false node --env-file=.env dist/index.js",
     "dev": "node --env-file=.env --watch-path=./src --experimental-transform-types --import tsx --require tsconfig-paths/register src/index.ts",
-    "prisma:db:pull": "echo \"**** Introspecting DB schema which means will get all database schema into src/prisma/schema.prisma file.\" ; npx prisma db pull",
+    "prisma:db:pull": "echo \"**** Introspecting DB schema which means will get all database schema into src/prisma-orm/schema.prisma file.\" ; npx prisma db pull",
     "prisma:db:generate": "echo \"**** Generating types\" ; npx prisma generate",
     "graphql:generate": "echo \"**** Generating GraphQL types\" ; graphql-codegen"
   },
@@ -18,7 +19,7 @@
     "Interview"
   ],
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/prisma-orm/schema.prisma"
   },
   "author": "",
   "license": "ISC",
@@ -41,6 +42,7 @@
     "@types/cors": "^2.8.17",
     "@types/morgan": "^1.9.9",
     "@types/pg": "^8.11.11",
-    "prisma": "^6.3.1"
+    "prisma": "^6.3.1",
+    "tsc-alias": "^1.8.10"
   }
 }

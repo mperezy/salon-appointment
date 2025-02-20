@@ -5,8 +5,10 @@ const USE_PRISMA = process.env.USE_PRISMA === 'true';
 export const getServicesAndSalons = async (): Promise<Service[]> => {
   try {
     if (USE_PRISMA) {
-      const prismaClient = await import('../prisma').then((result) => result.default);
-      const servicesPrisma = await import('../prisma/services').then((result) => result.default);
+      const prismaClient = await import('../prisma-orm').then((result) => result.default);
+      const servicesPrisma = await import('../prisma-orm/services').then(
+        (result) => result.default
+      );
 
       return await servicesPrisma(prismaClient).getServicesAndSalons();
     }

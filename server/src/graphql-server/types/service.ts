@@ -1,5 +1,5 @@
 import { list, objectType, queryField } from 'nexus';
-import servicesPrisma from 'prisma/services';
+import servicesPrisma from 'prisma-orm/services';
 import Salon from 'graphql-server/types/salon';
 
 const services = objectType({

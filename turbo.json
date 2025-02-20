@@ -12,11 +12,11 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "cache": true,
+      "cache": false,
       "outputs": ["dist/**"]
     },
-    "prod": {
-      "dependsOn": ["^prod"]
+    "start": {
+      "dependsOn": ["^start"]
     },
     "prisma:db:pull": {
       "dependsOn": ["^prisma:db:pull"],

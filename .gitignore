@@ -9,7 +9,7 @@ db/postgres-server/
 db/pgadmin/
 
 # Prisma
-server/src/prisma/generated/
+server/src/prisma-orm/generated/
 
 # GraphQL
 server/src/graphql-server/generated

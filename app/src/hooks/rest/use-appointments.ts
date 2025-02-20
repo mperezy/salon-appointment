@@ -28,6 +28,7 @@ export default ({ params, options: { enabled = true } }: Props): UseAppointments
     if (enabled) {
       refetch().then();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

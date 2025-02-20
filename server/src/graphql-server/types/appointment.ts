@@ -1,5 +1,5 @@
 import { list, mutationField, nonNull, nullable, objectType, queryField } from 'nexus';
-import appointmentsPrisma from 'prisma/appointments';
+import appointmentsPrisma from 'prisma-orm/appointments';
 import { serviceAndSalons } from 'graphql-server/types/service';
 
 const appointments = objectType({

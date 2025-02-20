@@ -1,4 +1,4 @@
-import type { PrismaClient } from 'prisma/generated';
+import type { PrismaClient } from 'prisma-orm/generated';
 
 type ServicesPrisma = {
   getServicesAndSalons: () => Promise<Service[]>;
